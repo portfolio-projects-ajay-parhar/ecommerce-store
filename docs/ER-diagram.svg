@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640" font-family="Segoe UI, Arial, sans-serif" font-size="12">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#64748b"/>
+    </marker>
+    <style>
+      .e { fill:#f8fafc; stroke:#334155; stroke-width:1.2; }
+      .t { font-weight:700; fill:#0f172a; }
+      .pk { font-size:10px; fill:#334155; }
+      .rel { stroke:#64748b; stroke-width:1.1; fill:none; marker-end:url(#a); }
+      .lbl { font-size:10px; fill:#64748b; }
+    </style>
+  </defs>
+  <text x="500" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">ER Diagram — E-Commerce Store (Prisma / Postgres)</text>
+
+  <!-- User -->
+  <rect class="e" x="20" y="60" width="170" height="150" rx="8"/>
+  <text class="t" x="105" y="80" text-anchor="middle">User</text>
+  <text class="pk" x="30" y="100">id PK · email UQ</text>
+  <text class="pk" x="30" y="114">name · passwordHash</text>
+  <text class="pk" x="30" y="128">role (CUSTOMER|ADMIN)</text>
+  <text class="pk" x="30" y="142">phone? · image?</text>
+  <text class="pk" x="30" y="156">createdAt/updatedAt</text>
+
+  <!-- Address -->
+  <rect class="e" x="20" y="250" width="170" height="100" rx="8"/>
+  <text class="t" x="105" y="270" text-anchor="middle">Address</text>
+  <text class="pk" x="30" y="290">id PK · userId FK</text>
+  <text class="pk" x="30" y="304">fullName · line1/2 · city</text>
+  <text class="pk" x="30" y="318">state? · postalCode · country</text>
+  <text class="pk" x="30" y="332">isDefault · label? · phone?</text>
+
+  <!-- Cart -->
+  <rect class="e" x="20" y="390" width="170" height="80" rx="8"/>
+  <text class="t" x="105" y="410" text-anchor="middle">Cart / CartItem</text>
+  <text class="pk" x="30" y="430">cart: userId UQ</text>
+  <text class="pk" x="30" y="444">item: (cartId,productId) UQ</text>
+  <text class="pk" x="30" y="458">quantity</text>
+
+  <!-- Wishlist -->
+  <rect class="e" x="20" y="510" width="170" height="70" rx="8"/>
+  <text class="t" x="105" y="530" text-anchor="middle">WishlistItem</text>
+  <text class="pk" x="30" y="550">(userId, productId) UQ</text>
+  <text class="pk" x="30" y="564">addedAt</text>
+
+  <!-- Category -->
+  <rect class="e" x="260" y="60" width="170" height="90" rx="8"/>
+  <text class="t" x="345" y="80" text-anchor="middle">Category</text>
+  <text class="pk" x="270" y="100">id PK · slug UQ · name</text>
+  <text class="pk" x="270" y="114">description? · imageUrl?</text>
+  <text class="pk" x="270" y="128">isActive</text>
+
+  <!-- Product -->
+  <rect class="e" x="260" y="200" width="170" height="150" rx="8"/>
+  <text class="t" x="345" y="220" text-anchor="middle">Product</text>
+  <text class="pk" x="270" y="240">id PK · slug UQ · name</text>
+  <text class="pk" x="270" y="254">description (sanitized)</text>
+  <text class="pk" x="270" y="268">priceCents (Int!)</text>
+  <text class="pk" x="270" y="282">compareAtPriceCents?</text>
+  <text class="pk" x="270" y="296">status (DRAFT|ACTIVE|ARCH)</text>
+  <text class="pk" x="270" y="310">featured · categoryId FK</text>
+  <text class="pk" x="270" y="324">avgRating · reviewCount</text>
+
+  <!-- ProductImage -->
+  <rect class="e" x="480" y="200" width="150" height="70" rx="8"/>
+  <text class="t" x="555" y="220" text-anchor="middle">ProductImage</text>
+  <text class="pk" x="490" y="240">productId FK · url</text>
+  <text class="pk" x="490" y="254">alt? · sortOrder</text>
+
+  <!-- Inventory -->
+  <rect class="e" x="480" y="310" width="150" height="80" rx="8"/>
+  <text class="t" x="555" y="330" text-anchor="middle">Inventory</text>
+  <text class="pk" x="490" y="350">productId UQ FK · sku UQ</text>
+  <text class="pk" x="490" y="364">quantityOnHand</text>
+  <text class="pk" x="490" y="378">lowStockThreshold</text>
+
+  <!-- Order -->
+  <rect class="e" x="720" y="60" width="180" height="180" rx="8"/>
+  <text class="t" x="810" y="80" text-anchor="middle">Order</text>
+  <text class="pk" x="730" y="100">id PK · number UQ</text>
+  <text class="pk" x="730" y="114">userId FK · status</text>
+  <text class="pk" x="730" y="128">subtotalCents · shippingCents</text>
+  <text class="pk" x="730" y="142">totalCents</text>
+  <text class="pk" x="730" y="156">shipping snapshot (flat)</text>
+  <text class="pk" x="730" y="170">stripeSessionId UQ</text>
+  <text class="pk" x="730" y="184">stripePaymentIntentId?</text>
+  <text class="pk" x="730" y="198">placedAt · paidAt · …</text>
+
+  <!-- OrderItem -->
+  <rect class="e" x="720" y="280" width="180" height="110" rx="8"/>
+  <text class="t" x="810" y="300" text-anchor="middle">OrderItem</text>
+  <text class="pk" x="730" y="320">orderId FK · productId? FK</text>
+  <text class="pk" x="730" y="334">productName (snapshot)</text>
+  <text class="pk" x="730" y="348">productSlug (snapshot)</text>
+  <text class="pk" x="730" y="362">unitPriceCents (snapshot)</text>
+  <text class="pk" x="730" y="376">quantity · lineTotalCents</text>
+
+  <!-- Payment -->
+  <rect class="e" x="720" y="430" width="180" height="80" rx="8"/>
+  <text class="t" x="810" y="450" text-anchor="middle">Payment</text>
+  <text class="pk" x="730" y="470">orderId UQ FK · provider</text>
+  <text class="pk" x="730" y="484">amountCents · status</text>
+  <text class="pk" x="730" y="498">providerRef?</text>
+
+  <!-- Review -->
+  <rect class="e" x="480" y="430" width="170" height="90" rx="8"/>
+  <text class="t" x="565" y="450" text-anchor="middle">Review</text>
+  <text class="pk" x="490" y="470">(productId,userId) UQ</text>
+  <text class="pk" x="490" y="484">rating 1–5 · title? · body</text>
+  <text class="pk" x="490" y="498">status (PUBLISHED|HIDDEN)</text>
+
+  <!-- WebhookEvent / EmailLog -->
+  <rect class="e" x="260" y="420" width="170" height="100" rx="8"/>
+  <text class="t" x="345" y="440" text-anchor="middle">WebhookEvent</text>
+  <text class="pk" x="270" y="460">eventId UQ · type · payload</text>
+  <text class="pk" x="270" y="474">processedAt</text>
+  <text class="pk" x="270" y="502">EmailLog: to · template · status</text>
+  <text class="pk" x="270" y="516">SENT/FAILED/SKIPPED · orderId?</text>
+
+  <!-- MediaItem -->
+  <rect class="e" x="260" y="560" width="170" height="60" rx="8"/>
+  <text class="t" x="345" y="580" text-anchor="middle">MediaItem</text>
+  <text class="pk" x="270" y="600">url · storagePath · uploadedById FK</text>
+
+  <!-- Relations -->
+  <path class="rel" d="M105,210 L105,250"/> <text class="lbl" x="112" y="235">1:N addresses</text>
+  <path class="rel" d="M105,350 L105,390"/> <text class="lbl" x="112" y="372">1:1 cart</text>
+  <path class="rel" d="M105,470 L105,510"/> <text class="lbl" x="112" y="492">1:N wishlist</text>
+  <path class="rel" d="M345,150 L345,200"/> <text class="lbl" x="352" y="178">1:N products</text>
+  <path class="rel" d="M430,240 L480,240"/> <text class="lbl" x="440" y="232">1:N images</text>
+  <path class="rel" d="M430,300 L480,330"/> <text class="lbl" x="438" y="318">1:1 inventory</text>
+  <path class="rel" d="M190,120 C260,140 300,160 340,200"/> <text class="lbl" x="230" y="150">places</text>
+  <path class="rel" d="M190,430 C240,380 220,330 260,310"/> <text class="lbl" x="222" y="382">cart items →</text>
+  <path class="rel" d="M430,290 C480,320 480,400 520,450"/> <text class="lbl" x="470" y="405">1:N reviews</text>
+  <path class="rel" d="M190,110 C400,40 560,40 718,100"/> <text class="lbl" x="450" y="52">1:N orders</text>
+  <path class="rel" d="M900,240 L900,280"/> <text class="lbl" x="906" y="264">1:N items</text>
+  <path class="rel" d="M900,390 L900,430"/> <text class="lbl" x="906" y="412">1:1 payment</text>
+  <path class="rel" d="M760,280 C600,260 480,250 430,255" stroke-dasharray="4 4"/>
+  <text class="lbl" x="560" y="248">productId? (SetNull on delete)</text>
+</svg>

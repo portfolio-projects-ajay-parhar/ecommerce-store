@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 560" font-family="Segoe UI, Arial, sans-serif" font-size="13">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#555"/>
+    </marker>
+  </defs>
+  <style>
+    .box { fill:#ffffff; stroke:#333; stroke-width:1.5; rx:8; }
+    .label { font-weight:600; fill:#111827; }
+    .sub { fill:#6b7280; font-size:11px; }
+    .edge { stroke:#555; stroke-width:1.4; fill:none; marker-end:url(#arrow); }
+    .rzp { fill:#0c2451; }
+    .note { fill:#fef3c7; stroke:#d97706; }
+  </style>
+
+  <text x="490" y="28" text-anchor="middle" font-size="18" font-weight="700" fill="#111827">E-Commerce Store — Razorpay Payment &amp; Order Flow</text>
+
+  <!-- Browser -->
+  <rect class="box" x="30" y="60" width="180" height="70" rx="8"/>
+  <text x="120" y="88" text-anchor="middle" class="label">Browser</text>
+  <text x="120" y="106" text-anchor="middle" class="sub">storefront · admin · cart</text>
+
+  <!-- Next.js -->
+  <rect class="box" x="300" y="60" width="200" height="70" rx="8"/>
+  <text x="400" y="88" text-anchor="middle" class="label">Next.js 16 (Vercel)</text>
+  <text x="400" y="106" text-anchor="middle" class="sub">server components + /api routes</text>
+
+  <!-- Razorpay Checkout modal -->
+  <rect class="rzp" x="660" y="60" width="260" height="70" rx="8"/>
+  <text x="790" y="88" text-anchor="middle" fill="#fff" font-weight="600">Razorpay Checkout (modal)</text>
+  <text x="790" y="106" text-anchor="middle" fill="#a9c1e8" font-size="11">UPI · cards · netbanking (test mode)</text>
+
+  <!-- Supabase DB -->
+  <rect class="box" x="300" y="225" width="200" height="80" rx="8"/>
+  <text x="400" y="253" text-anchor="middle" class="label">Supabase Postgres</text>
+  <text x="400" y="271" text-anchor="middle" class="sub">Prisma 6 · 15 models</text>
+  <text x="400" y="287" text-anchor="middle" class="sub">pooled 6543 · direct 5432 (migrations)</text>
+
+  <!-- Transaction note -->
+  <rect class="note" x="40" y="200" width="215" height="120" rx="8"/>
+  <text x="147" y="224" text-anchor="middle" font-weight="700" fill="#92400e">Checkout transaction</text>
+  <text x="52" y="244" font-size="11" fill="#92400e">1. load cart + DB prices</text>
+  <text x="52" y="260" font-size="11" fill="#92400e">2. Inventory: qty -= n WHERE qty >= n</text>
+  <text x="52" y="276" font-size="11" fill="#92400e">3. Order PENDING + snapshots</text>
+  <text x="52" y="292" font-size="11" fill="#92400e">4. Payment PENDING · clear cart</text>
+  <text x="52" y="310" font-size="11" font-weight="600" fill="#92400e">any failure → full rollback</text>
+
+  <!-- Verify route (client handler callback) -->
+  <rect class="box" x="660" y="185" width="260" height="70" rx="8"/>
+  <text x="790" y="208" text-anchor="middle" class="label">POST /api/checkout/verify</text>
+  <text x="790" y="226" text-anchor="middle" class="sub">constant-time HMAC-SHA256 check</text>
+  <text x="790" y="242" text-anchor="middle" class="sub">client handler callback → order PAID</text>
+
+  <!-- Webhook handler -->
+  <rect class="box" x="660" y="300" width="260" height="90" rx="8"/>
+  <text x="790" y="323" text-anchor="middle" class="label">POST /api/webhooks/razorpay</text>
+  <text x="790" y="341" text-anchor="middle" class="sub">verify signature → claim WebhookEvent</text>
+  <text x="790" y="357" text-anchor="middle" class="sub">payment.captured · failed · refund.processed</text>
+  <text x="790" y="373" text-anchor="middle" class="sub">(idempotent by unique eventId)</text>
+
+  <!-- Resend -->
+  <rect class="box" x="660" y="440" width="260" height="70" rx="8"/>
+  <text x="790" y="468" text-anchor="middle" class="label">Resend</text>
+  <text x="790" y="486" text-anchor="middle" class="sub">order confirmation + EmailLog row</text>
+  <text x="790" y="500" text-anchor="middle" class="sub">(SKIPPED if unconfigured)</text>
+
+  <!-- Edges -->
+  <path class="edge" d="M210,95 L295,95"/>
+  <text x="252" y="88" text-anchor="middle" class="sub">HTTPS</text>
+
+  <path class="edge" d="M400,135 L400,220"/>
+  <text x="452" y="180" class="sub">Prisma queries</text>
+
+  <path class="edge" d="M505,95 L655,95"/>
+  <text x="580" y="78" text-anchor="middle" class="sub">create Razorpay Order</text>
+  <text x="580" y="114" text-anchor="middle" class="sub">→ client opens modal</text>
+
+  <path class="edge" d="M750,135 L750,180"/>
+  <text x="758" y="158" class="sub">signed handler:</text>
+  <text x="758" y="174" class="sub">order_id · payment_id · HMAC</text>
+
+  <path class="edge" d="M700,135 C622,190 622,250 685,295" stroke-dasharray="5 4"/>
+  <text x="618" y="262" text-anchor="end" class="sub">Razorpay events</text>
+
+  <!-- verify to DB -->
+  <path class="edge" d="M655,222 L505,250"/>
+  <text x="580" y="226" text-anchor="middle" class="sub">order PAID (idempotent)</text>
+
+  <!-- webhook to DB -->
+  <path class="edge" d="M655,335 L505,285"/>
+  <text x="580" y="318" text-anchor="middle" class="sub">PAID / FAILED / REFUNDED</text>
+  <text x="580" y="334" text-anchor="middle" class="sub">+ restock</text>
+
+  <!-- webhook to email -->
+  <path class="edge" d="M790,390 L790,435"/>
+  <text x="798" y="416" class="sub">sendOrderConfirmation</text>
+
+  <!-- email to user (routed along the left margin, clear of the note) -->
+  <path class="edge" d="M655,475 C460,525 90,480 18,330 L18,100 L26,95"/>
+  <text x="240" y="522" text-anchor="middle" class="sub">"Order ORD-2026-0001 confirmed"</text>
+
+  <!-- footer note -->
+  <text x="490" y="545" text-anchor="middle" class="sub">Totals recomputed server-side · conditional inventory updates (no oversell) · constant-time HMAC verification (verify + webhook) · WebhookEvent idempotency · Resend failure never fails payment</text>
+</svg>
