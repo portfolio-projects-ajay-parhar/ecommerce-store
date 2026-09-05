@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npm run type-check
+
+      - name: Unit tests
+        run: npm test
+
+      # next build doesn't touch the DB (all pages dynamic / force-dynamic),
+      # so a placeholder DATABASE_URL is enough at build time.
+      - name: Build
+        run: npm run build
+        env:
+          DATABASE_URL: "postgresql://ci:ci@localhost:5432/ci"
+          DIRECT_URL: "postgresql://ci:ci@localhost:5432/ci"
+          NEXTAUTH_SECRET: "ci-placeholder-secret"
+          NEXTAUTH_URL: "http://localhost:3000"
+          RAZORPAY_KEY_ID: "rzp_test_placeholder"
+          RAZORPAY_KEY_SECRET: "placeholder"
+          NEXT_PUBLIC_RAZORPAY_KEY_ID: "rzp_test_placeholder"
