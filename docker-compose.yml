@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: ecommerce-pg
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ecommerce
+    ports:
+      - "5433:5432"
+    volumes:
+      - ecommerce_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ecommerce"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build: .
+    container_name: ecommerce-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/ecommerce?schema=public
+      DIRECT_URL: postgresql://postgres:postgres@db:5432/ecommerce?schema=public
+      NEXTAUTH_SECRET: dev-secret-change-me-in-production-0123456789abcdef
+      NEXTAUTH_URL: http://localhost:3000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      RAZORPAY_KEY_ID: rzp_test_placeholder
+      RAZORPAY_KEY_SECRET: placeholder
+      NEXT_PUBLIC_RAZORPAY_KEY_ID: rzp_test_placeholder
+      RAZORPAY_WEBHOOK_SECRET: ""
+      EMAIL_FROM: orders@yourdomain.dev
+    ports:
+      - "3000:3000"
+    # First boot: push the schema + seed, then serve
+    command: sh -c "npx prisma migrate deploy && npx tsx prisma/seed.ts && npm run start"
+
+volumes:
+  ecommerce_pgdata:
